@@ -1,0 +1,70 @@
+﻿@page "/majors"
+@using Univercity.Client.Model
+@using Univercity.Client.Service
+@inject UniService UniService
+
+<h3>Majors</h3>
+
+@if (majors == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!majors.Any())
+{
+    <p>No data found.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Major ID</th>
+                <th>Major Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var major in majors)
+            {
+                <tr>
+                    <td>@major.MajorId</td>
+                    <td>@major.MajorNamem</td>
+                    <td>@(major.Description ?? "N/A")</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => EditMajor(major.MajorId)">Edit</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteMajor(major.MajorId)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<MajorDto> majors;
+
+    protected override async Task OnInitializedAsync()
+    {
+        majors = await UniService.GetAllMajorsAsync();
+    }
+
+    private void EditMajor(int majorId)
+    {
+        // Logic to navigate to the edit page or open a modal
+    }
+
+    private async Task DeleteMajor(int majorId)
+    {
+        var response = await UniService.DeleteMajorAsync(majorId);
+        if (response.Flag)
+        {
+            // Refresh the list after deletion
+            majors = await UniService.GetAllMajorsAsync();
+        }
+        else
+        {
+            // Handle error (e.g., show a message)
+        }
+    }
+}

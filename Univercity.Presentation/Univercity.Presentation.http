@@ -1,0 +1,6 @@
+@Univercity.Presentation_HostAddress = http://localhost:5014
+
+GET {{Univercity.Presentation_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
